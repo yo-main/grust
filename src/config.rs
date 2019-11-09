@@ -89,7 +89,6 @@ impl Config {
             self.words = self.words.iter().map(|x| x.to_lowercase()).collect();
             self.exclude = self.exclude.iter().map(|x| x.to_lowercase()).collect();
         }
-
     }
 }
 

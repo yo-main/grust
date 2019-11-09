@@ -15,7 +15,10 @@ pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
     if config.verbose {
         println!("{:?}", results);
     };
-    println!("{} references found\n", results.iter().map(|x| x.count).sum::<u32>());
+    println!(
+        "{} references found\n",
+        results.iter().map(|x| x.count).sum::<u32>()
+    );
     Ok(results)
 }
 

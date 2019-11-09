@@ -2,11 +2,11 @@ use std::io;
 
 mod arguments;
 mod config;
+mod display;
 mod matcher;
 mod searcher;
-mod display;
 
-pub fn process() -> Result<(), io::Error>{
+pub fn process() -> Result<(), io::Error> {
     let config = prepare_config();
 
     if config.help {
