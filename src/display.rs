@@ -34,7 +34,7 @@ fn print_results(dataset: &HashMap::<path::PathBuf, FileSet>, config: &config::C
 
     words.sort_by(|a, b| b.1.cmp(&a.1));
     
-    let filename_max_size = dataset.iter().map(|(filename, _)| filename.to_str().unwrap().len()).max().unwrap();
+    let filename_max_size = dataset.iter().map(|(filename, _)| extract_filename(&filename, &config).len()).max().unwrap();
 
     let mut title = format!("{:<1$}", "file", filename_max_size);
     for word in &words {
@@ -43,11 +43,13 @@ fn print_results(dataset: &HashMap::<path::PathBuf, FileSet>, config: &config::C
 
     println!("{}", title);
 
-    for data in dataset {
+    let mut sorted_dataset = dataset.iter().collect::<Vec<_>>();
+    sorted_dataset.sort_by(|a, b| b.0.file_name().cmp(&a.0.file_name()));
+    for data in sorted_dataset {
         let filename = data.0;
         let matches = data.1;
 
-        let mut row = format!("{:>1$}", filename.to_str().unwrap(), filename_max_size);
+        let mut row = format!("{:>1$}", extract_filename(&filename, &config), filename_max_size);
         for word in &words {
             row.push_str(
                 format!(" | {:>1$?}", matches.words.get(&word.0).unwrap(), cmp::max(word.0.len(), format!("{}", word.1).len())).as_str()
@@ -57,6 +59,13 @@ fn print_results(dataset: &HashMap::<path::PathBuf, FileSet>, config: &config::C
     }
 
     Ok(())
+}
+
+fn extract_filename<'a>(file: &'a path::PathBuf, config: &config::Config) -> &'a str {
+    match config.full_path {
+        true => file.to_str().unwrap(),
+        false => file.file_name().unwrap().to_str().unwrap()
+    }
 }
 
 fn parse_results(results: &Vec<matcher::Match>, config: &config::Config) -> HashMap::<path::PathBuf, FileSet> {
