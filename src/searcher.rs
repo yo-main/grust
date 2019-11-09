@@ -5,7 +5,7 @@ use std::path;
 use super::config;
 use super::matcher;
 
-pub fn run_search(config: config::Config) -> io::Result<Vec<matcher::Match>> {
+pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
     if config.verbose {
         println!("{}\n", config);
     }
