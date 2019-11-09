@@ -84,6 +84,13 @@ pub fn generate() -> Vec<Argument> {
             long: String::from("--exclude"),
             help: String::from("Comma-separated list of words. \nRow won't be matched if they include one of those words"),
             default: DefaultValue::Text(String::new()),
+        },
+        Argument {
+            id: String::from("all"),
+            short: String::from("-a"),
+            long: String::from("--all"),
+            help: String::from("Look into all files"),
+            default: DefaultValue::Bool(false),
         }
     ]
 }

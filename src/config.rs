@@ -12,6 +12,7 @@ pub struct Config {
     pub verbose: bool,
     pub save_result: bool,
     pub full_path: bool,
+    pub all_files: bool,
 }
 
 impl Config {
@@ -26,6 +27,7 @@ impl Config {
             verbose: get_bool_from("verbose", &args),
             full_path: get_bool_from("full_path", &args),
             save_result: get_bool_from("save", &args),
+            all_files: get_bool_from("all", &args),
         };
         out.update();
         out
@@ -55,6 +57,8 @@ impl Config {
                 "--save" => self.save_result = true,
                 "-fp" => self.full_path = true,
                 "--full_path" => self.full_path = true,
+                "-a" => self.all_files = true,
+                "--all" => self.all_files = true,
                 "-e" => {
                     self.exclude = iterator
                         .next()

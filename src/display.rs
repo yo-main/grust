@@ -53,7 +53,7 @@ fn print_results(
         .max()
         .unwrap();
 
-    let mut title = format!("{:<1$}", "file", filename_max_size);
+    let mut title = format!("{:>1$}", "file", filename_max_size);
     for word in &words {
         title.push_str(
             format!(
@@ -120,7 +120,7 @@ fn parse_results(
         let fileset = dataset
             .get_mut(&res.file)
             .expect(format!("{:?} was unknown in the dataset", res.file).as_str());
-        let count: u32 = *fileset.words.get_mut(res.word.as_str()).unwrap_or(&mut 0) + 1;
+        let count: u32 = *fileset.words.get_mut(res.word.as_str()).unwrap_or(&mut 0) + res.count;
         fileset.words.insert(res.word.clone(), count);
         fileset.count += 1;
     }
