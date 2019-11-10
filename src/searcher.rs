@@ -31,23 +31,20 @@ pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
     let mut stats: Stats = Stats::new();
     let results = search_dir(&config.dir, &config, &mut stats).unwrap_or_default();
     println!("\n");
-    println!(
-        "statitics:
-            total seen:     {}
-            analyzed:       {}
-            matches:        {}
-            skipped:        {}
-            not readable:   {}\n",
-        stats.seen,
-        stats.analyzed,
-        results.iter().map(|x| x.count).sum::<u32>(),
-        stats.skipped,
-        stats.seen - stats.analyzed - stats.skipped
-    );
-
     if config.verbose {
-        println!("{:?}", results);
+        println!(
+            "statitics:
+    analyzed:       {}
+    skipped:        {}
+    not readable:   {}
+    total matches:  {}\n",
+            stats.analyzed,
+            stats.skipped,
+            stats.seen - stats.analyzed - stats.skipped,
+            results.iter().map(|x| x.count).sum::<u32>(),
+        );
     };
+
     Ok(results)
 }
 
@@ -61,6 +58,10 @@ fn search_dir(
     for path in fs::read_dir(dir)? {
         let file = path?;
         let metadata = file.metadata()?;
+
+        if !config.hidden && file.file_name().to_str().unwrap().starts_with(".") {
+            continue;
+        }
 
         if metadata.is_dir() {
             if config.recursive {

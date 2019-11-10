@@ -38,9 +38,9 @@ pub fn generate() -> Vec<Argument> {
         },
         Argument {
             id: String::from("recursive"),
-            short: String::from("-r"),
-            long: String::from("--recursive"),
-            help: String::from("Recursive search (looking into directories and their subdirectories)"),
+            short: String::from("-f"),
+            long: String::from("--flat"),
+            help: String::from("Make non recursive search (recursive is on by default)"),
             default: DefaultValue::Bool(true),
         },
         Argument {
@@ -90,6 +90,13 @@ pub fn generate() -> Vec<Argument> {
             short: String::from("-a"),
             long: String::from("--all"),
             help: String::from("Look into all kind of files"),
+            default: DefaultValue::Bool(false),
+        },
+        Argument {
+            id: String::from("hidden"),
+            short: String::from("-hi"),
+            long: String::from("--hidden"),
+            help: String::from("Look into hidden files and directories (if recursive search is on)"),
             default: DefaultValue::Bool(false),
         }
     ]

@@ -13,6 +13,7 @@ pub struct Config {
     pub save_result: bool,
     pub full_path: bool,
     pub all_files: bool,
+    pub hidden: bool,
 }
 
 impl Config {
@@ -28,6 +29,7 @@ impl Config {
             full_path: get_bool_from("full_path", &args),
             save_result: get_bool_from("save", &args),
             all_files: get_bool_from("all", &args),
+            hidden: get_bool_from("hidden", &args),
         };
         out.update();
         out
@@ -47,8 +49,8 @@ impl Config {
             match arg.as_str() {
                 "-h" => self.help = true,
                 "--help" => self.help = true,
-                "-r" => self.recursive = true,
-                "--recursive" => self.recursive = true,
+                "-f" => self.recursive = false,
+                "--flat" => self.recursive = false,
                 "-v" => self.verbose = true,
                 "--verbose" => self.verbose = true,
                 "-cs" => self.case_sensitive = true,
@@ -59,6 +61,8 @@ impl Config {
                 "--full_path" => self.full_path = true,
                 "-a" => self.all_files = true,
                 "--all" => self.all_files = true,
+                "-hi" => self.hidden = true,
+                "--hidden" => self.hidden = true,
                 "-e" => {
                     self.exclude = iterator
                         .next()
@@ -92,6 +96,10 @@ impl Config {
         if !self.case_sensitive {
             self.words = self.words.iter().map(|x| x.to_lowercase()).collect();
             self.exclude = self.exclude.iter().map(|x| x.to_lowercase()).collect();
+        }
+
+        if self.words.is_empty() {
+            self.help = true;
         }
     }
 }
