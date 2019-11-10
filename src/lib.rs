@@ -16,9 +16,9 @@ pub fn process() -> Result<(), io::Error> {
 
         if results.is_empty() {
             println!("No results have been found !");
+        } else {
+            display::display_results(&results, &config);
         }
-
-        display::display_results(&results, &config);
     }
 
     Ok(())

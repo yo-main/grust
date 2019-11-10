@@ -9,14 +9,14 @@ const EXTENTIONS: [&str; 6] = [".py", ".rs", ".js", ".html", ".txt", ".c"];
 
 struct Stats {
     seen: u32,
-    found: u32,
     skipped: u32,
+    analyzed: u32,
 }
 
 impl Stats {
     fn new() -> Self {
         Self {
-            found: 0,
+            analyzed: 0,
             skipped: 0,
             seen: 0,
         }
@@ -32,9 +32,17 @@ pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
     let results = search_dir(&config.dir, &config, &mut stats).unwrap_or_default();
     println!("\n");
     println!(
-        "{} analyzed for {} matches\n",
-        stats.seen - stats.skipped,
-        results.iter().map(|x| x.count).sum::<u32>()
+        "statitics:
+            total seen:     {}
+            analyzed:       {}
+            matches:        {}
+            skipped:        {}
+            not readable:   {}\n",
+        stats.seen,
+        stats.analyzed,
+        results.iter().map(|x| x.count).sum::<u32>(),
+        stats.skipped,
+        stats.seen - stats.analyzed - stats.skipped
     );
 
     if config.verbose {
@@ -78,9 +86,11 @@ fn search_file(
     config: &config::Config,
     stats: &mut Stats,
 ) -> io::Result<Vec<matcher::Match>> {
-    print!("\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r");
-    print!("{} file(s) seen", stats.seen);
     stats.seen += 1;
+    print!(
+        "\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r{} file(s) seen",
+        stats.seen
+    );
 
     if !config.all_files {
         if !EXTENTIONS
@@ -96,6 +106,8 @@ fn search_file(
     let reader = io::BufReader::new(file);
     let mut results: Vec<matcher::Match> = Vec::new();
 
+    stats.analyzed += 1;
+
     for (row_nb, mut row) in reader.lines().map(|x| x.unwrap_or_default()).enumerate() {
         if !config.case_sensitive {
             row = row.to_lowercase();
@@ -107,7 +119,6 @@ fn search_file(
 
         for word in &config.words {
             if row.contains(word.as_str()) {
-                stats.found += 1;
                 results.push(matcher::Match {
                     count: row.split(word.as_str()).count() as u32 - 1,
                     data: row.trim().to_string(),

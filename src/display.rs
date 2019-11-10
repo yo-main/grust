@@ -129,7 +129,6 @@ fn parse_results(
     dataset
 }
 
-
 pub fn display_help() {
     let parameters = arguments::generate();
     println!("\nShow files where your keywords have been found!");
@@ -138,7 +137,9 @@ pub fn display_help() {
     println!("FLAGS:");
     for param in parameters.iter() {
         match param.default {
-            arguments::DefaultValue::Bool(_) => println!("   {:3}   {:20}   {}", param.short, param.long, param.help),
+            arguments::DefaultValue::Bool(_) => {
+                println!("   {:3}   {:20}   {}", param.short, param.long, param.help)
+            }
             _ => continue,
         }
     }
@@ -147,14 +148,10 @@ pub fn display_help() {
     for param in parameters.iter() {
         match param.default {
             arguments::DefaultValue::Bool(_) => continue,
-            _ if !param.short.is_empty() => println!("  {:3}    {:20}   {}", param.short, param.long, param.help),
+            _ if !param.short.is_empty() => {
+                println!("  {:3}    {:20}   {}", param.short, param.long, param.help)
+            }
             _ => continue,
         }
     }
-
 }
-
-
-
-
-
