@@ -5,7 +5,7 @@ use std::path;
 use super::config;
 use super::matcher;
 
-const extentions: [&str; 6] = [".py", ".rs", ".js", ".html", ".txt", ".c"];
+const EXTENTIONS: [&str; 6] = [".py", ".rs", ".js", ".html", ".txt", ".c"];
 
 struct Stats {
     seen: u32,
@@ -83,7 +83,7 @@ fn search_file(
     stats.seen += 1;
 
     if !config.all_files {
-        if !extentions
+        if !EXTENTIONS
             .iter()
             .any(|x| filename.file_name().unwrap().to_str().unwrap().ends_with(x))
         {

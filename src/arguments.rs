@@ -40,21 +40,21 @@ pub fn generate() -> Vec<Argument> {
             id: String::from("recursive"),
             short: String::from("-r"),
             long: String::from("--recursive"),
-            help: String::from("Look in the given path recursively"),
+            help: String::from("Recursive search (looking into directories and their subdirectories)"),
             default: DefaultValue::Bool(true),
         },
         Argument {
             id: String::from("case_sensitive"),
             short: String::from("-cs"),
             long: String::from("--case_sensitive"),
-            help: String::from("Apply case sensitivity to the search"),
+            help: String::from("Apply case sensitivity"),
             default: DefaultValue::Bool(false),
         },
         Argument {
             id: String::from("verbose"),
             short: String::from("-v"),
             long: String::from("--verbose"),
-            help: String::from("Show more detailed about the findings"),
+            help: String::from("Show more details"),
             default: DefaultValue::Bool(false),
         },
         Argument {
@@ -68,7 +68,7 @@ pub fn generate() -> Vec<Argument> {
             id: String::from("dir"),
             short: String::from("-d"),
             long: String::from("--dir"),
-            help: String::from("Path from where the search will start"),
+            help: String::from("Path from where the search will start (defaults to the current directory)"),
             default: DefaultValue::Text(String::from(".")),
         },
         Argument {
@@ -82,14 +82,14 @@ pub fn generate() -> Vec<Argument> {
             id: String::from("exclude"),
             short: String::from("-e"),
             long: String::from("--exclude"),
-            help: String::from("Comma-separated list of words. \nRow won't be matched if they include one of those words"),
+            help: String::from("Comma-separated list of words. Rows won't be matched if they include one of those words"),
             default: DefaultValue::Text(String::new()),
         },
         Argument {
             id: String::from("all"),
             short: String::from("-a"),
             long: String::from("--all"),
-            help: String::from("Look into all files"),
+            help: String::from("Look into all kind of files"),
             default: DefaultValue::Bool(false),
         }
     ]

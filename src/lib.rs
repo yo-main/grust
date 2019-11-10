@@ -10,7 +10,7 @@ pub fn process() -> Result<(), io::Error> {
     let config = prepare_config();
 
     if config.help {
-        // display_help();
+        display::display_help();
     } else {
         let results = searcher::run_search(&config)?;
 

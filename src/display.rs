@@ -3,6 +3,7 @@ use std::collections::HashMap;
 use std::io;
 use std::path;
 
+use super::arguments;
 use super::config;
 use super::matcher;
 
@@ -127,3 +128,33 @@ fn parse_results(
 
     dataset
 }
+
+
+pub fn display_help() {
+    let parameters = arguments::generate();
+    println!("\nShow files where your keywords have been found!");
+    println!("grust [OPTIONS] [FLAGS] word1 word2 \"sentence 1\"\n");
+
+    println!("FLAGS:");
+    for param in parameters.iter() {
+        match param.default {
+            arguments::DefaultValue::Bool(_) => println!("   {:3}   {:20}   {}", param.short, param.long, param.help),
+            _ => continue,
+        }
+    }
+
+    println!("\nOPTIONS:");
+    for param in parameters.iter() {
+        match param.default {
+            arguments::DefaultValue::Bool(_) => continue,
+            _ if !param.short.is_empty() => println!("  {:3}    {:20}   {}", param.short, param.long, param.help),
+            _ => continue,
+        }
+    }
+
+}
+
+
+
+
+
