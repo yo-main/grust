@@ -92,6 +92,20 @@ fn print_results(
         println!("{}", row);
     }
 
+    let mut total_row = format!("{:>1$}", "TOTAL", filename_max_size);
+    // let mut total_row = format!("{:>1$}", "file", filename_max_size);
+    for word in words.iter() {
+        total_row.push_str(
+            format!(
+                " | {:>1$?}",
+                word.1,
+                cmp::max(word.0.len(), format!("{}", word.1).len())
+            )
+            .as_str(),
+        )
+    }
+    println!("{}", total_row);
+
     Ok(())
 }
 
