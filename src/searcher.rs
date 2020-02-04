@@ -5,7 +5,7 @@ use std::path;
 use super::config;
 use super::matcher;
 
-const EXTENTIONS: [&str; 6] = [".py", ".rs", ".js", ".html", ".txt", ".c"];
+const EXTENTIONS: [&str; 10] = [".py",  ".md", ".rst", ".rs", ".js", ".html", ".txt", ".c", ".tf", ".tfstate"];
 
 struct Stats {
     seen: u32,
@@ -104,12 +104,30 @@ fn search_file(
     }
 
     let file = fs::File::open(filename)?;
+    let meta = file.metadata()?;
+
+    if !meta.is_file() {
+        return Ok(Vec::new());
+    }
+
     let reader = io::BufReader::new(file);
     let mut results: Vec<matcher::Match> = Vec::new();
 
     stats.analyzed += 1;
 
+    let mut empty_count = 0;
     for (row_nb, mut row) in reader.lines().map(|x| x.unwrap_or_default()).enumerate() {
+        // ensure we skip file if we have "infinite" amount of empty rows
+        if row.is_empty() {
+            empty_count += 1;
+            if empty_count > 5 {
+                break;
+            }
+            continue;
+        } else {
+            empty_count = 0;
+        }
+
         if !config.case_sensitive {
             row = row.to_lowercase();
         }
