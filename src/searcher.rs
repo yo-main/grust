@@ -6,6 +6,7 @@ use super::config;
 use super::matcher;
 
 use regex::Regex;
+use colored::*;
 
 const EXTENTIONS: [&str; 10] = [".py",  ".md", ".rst", ".rs", ".js", ".html", ".txt", ".c", ".tf", ".tfstate"];
 
@@ -36,7 +37,7 @@ pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
 
     if config.verbose {
         println!(
-            "statitics:
+            "\nstatitics:
     analyzed:       {}
     skipped:        {}
     not readable:   {}
@@ -135,10 +136,21 @@ fn search_file(
             continue;
         }
 
+        let mut row_formated: String = row.clone();
+
         for word in &config.words {
             let re = Regex::new(word).unwrap();
-            let count = re.captures_iter(row.as_str()).count();
+            let mut count = 0;
+            for m in re.captures_iter(row.as_str()) {
+                if config.verbose {
+                    let match_str = m.get(0).unwrap().as_str();
+                    row_formated = row_formated.replace(match_str, format!("{}", match_str.yellow()).as_str());
+                }
+                count += 1;
+            }
+
             if count > 0 {
+
                 results.push(matcher::Match {
                     count: count as u32,
                     data: row.trim().to_string(),
@@ -147,6 +159,10 @@ fn search_file(
                     file: path::PathBuf::from(filename),
                 })
             }
+        }
+    
+        if config.verbose && row_formated != row {
+            println!("{:?}: {}", filename, row_formated.trim())
         }
     }
     Ok(results)
