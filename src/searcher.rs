@@ -5,6 +5,8 @@ use std::path;
 use super::config;
 use super::matcher;
 
+use regex::Regex;
+
 const EXTENTIONS: [&str; 10] = [".py",  ".md", ".rst", ".rs", ".js", ".html", ".txt", ".c", ".tf", ".tfstate"];
 
 struct Stats {
@@ -24,13 +26,14 @@ impl Stats {
 }
 
 pub fn run_search(config: &config::Config) -> io::Result<Vec<matcher::Match>> {
-    if config.verbose {
-        println!("{}\n", config);
-    }
+    // Might be usefull to debug someday so I keep it commented
+    // if config.verbose {
+    //     println!("{}\n", config);
+    // }
 
     let mut stats: Stats = Stats::new();
     let results = search_dir(&config.dir, &config, &mut stats).unwrap_or_default();
-    println!("\n");
+
     if config.verbose {
         println!(
             "statitics:
@@ -88,10 +91,6 @@ fn search_file(
     stats: &mut Stats,
 ) -> io::Result<Vec<matcher::Match>> {
     stats.seen += 1;
-    print!(
-        "\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r\r{} file(s) seen",
-        stats.seen
-    );
 
     if !config.all_files {
         if !EXTENTIONS
@@ -137,9 +136,11 @@ fn search_file(
         }
 
         for word in &config.words {
-            if row.contains(word.as_str()) {
+            let re = Regex::new(word).unwrap();
+            let count = re.captures_iter(row.as_str()).count();
+            if count > 0 {
                 results.push(matcher::Match {
-                    count: row.split(word.as_str()).count() as u32 - 1,
+                    count: count as u32,
                     data: row.trim().to_string(),
                     word: word.clone(),
                     row: row_nb as u32,

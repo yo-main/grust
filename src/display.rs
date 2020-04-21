@@ -54,6 +54,9 @@ fn print_results(
         .max()
         .unwrap();
 
+    // 6 being TOTAL
+    let filename_max_size = cmp::max(filename_max_size, 6);
+
     let mut title = format!("{:>1$}", "file", filename_max_size);
     for word in &words {
         title.push_str(

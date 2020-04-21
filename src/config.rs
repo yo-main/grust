@@ -31,12 +31,12 @@ impl Config {
             all_files: get_bool_from("all", &args),
             hidden: get_bool_from("hidden", &args),
         };
-        out.update();
+        out.update();  // update with arguments provided by user
         out
     }
 
     pub fn update(&mut self) {
-        let args = env::args().collect::<Vec<String>>();
+        let args: Vec<String> = env::args().collect();
         let mut iterator = args.iter();
         iterator.next(); // get rid of the first argument (the script itself)
 

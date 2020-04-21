@@ -25,6 +25,6 @@ pub fn process() -> Result<(), io::Error> {
 }
 
 pub fn prepare_config() -> config::Config {
-    let args: Vec<arguments::Argument> = arguments::generate();
+    let args = arguments::generate();
     config::Config::new(&args)
 }
